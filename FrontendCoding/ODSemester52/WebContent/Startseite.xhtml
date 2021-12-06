@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+	<h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+
+	<link rel="stylesheet" href="style.css" />
+	<title>Neues aus Mosbach</title>
+
+
+</h:head>
+<body id="body">
+
+	<p:layout fullPage="true">
+		<p:layoutUnit position="north">
+			<ui:include src="/WEB-INF/header_include.xhtml" />
+
+			<h:form action="" class="searchbar" method="get">
+
+				<div class="ui-g-12" style="text-align: center">
+
+					<p:inputText value="#{vbean.text}" placeholder="Suchbegriff">
+
+						<p:ajax update="abschickenButton" listener="#{vbean.onAllChange}" />
+					</p:inputText>
+
+					<p:calendar placeholder="Datum von" value="#{vbean.datefrom}" mode="popup" showOn="focus" pattern="dd.MM.yyyy HH:mm">
+
+						<p:ajax update="abschickenButton" listener="#{vbean.onAllChange}" />
+						<p:ajax update="abschickenButton" listener="#{vbean.onAllChange}" event="dateSelect" />
+					</p:calendar>
+
+					<p:calendar placeholder="Datum bis" value="#{vbean.dateto}" mode="popup" showOn="focus" pattern="dd.MM.yyyy HH:mm">
+
+						<p:ajax update="abschickenButton" listener="#{vbean.onAllChange}" />
+						<p:ajax update="abschickenButton" listener="#{vbean.onAllChange}" event="dateSelect" />
+					</p:calendar>
+
+					<p:selectCheckboxMenu label="Kategorie" value="#{vbean.selectedKategorien}">
+						<p:ajax update="abschickenButton unterkategorie" listener="#{vbean.onKategorienChange}" />
+						<p:ajax update="abschickenButton unterkategorie" listener="#{vbean.onKategorienChange}" event="toggleSelect"/>
+						<f:selectItems value="#{vbean.moeglKategorien}" />
+					</p:selectCheckboxMenu>
+
+					<p:selectCheckboxMenu label="Unterkategorie" value="#{vbean.selectedUnterKategorien}" id="unterkategorie">
+						<p:ajax update="abschickenButton" listener="#{vbean.onAllChange}" event="toggleSelect" />
+						<p:ajax update="abschickenButton" listener="#{vbean.onAllChange}" />
+						<f:selectItems value="#{vbean.moeglUnterKategorien}" />
+					</p:selectCheckboxMenu>
+
+				</div>
+				<div class="ui-fluid" style="padding-top: 1%; padding-left: 5%; padding-right: 5%">
+
+					<p:linkButton id="abschickenButton" outcome="Map.jsf" value="#{vbean.buttontext}" />
+
+				</div>
+			</h:form>
+
+		</p:layoutUnit>
+
+		<p:layoutUnit position="center">
+			<div class="ui-g-12">
+
+				<p:contentFlow value="#{appBean.highlightVeranstaltungen}" var="veranstaltung">
+
+
+					<p:graphicImage url="/Images/#{veranstaltung.dateipfad}" styleClass="content" />
+
+					<a class="caption" style="color: #000000" href="VeranstaltungDetails.jsf?vid=#{veranstaltung.veranstaltungsID}">#{veranstaltung.titel}</a>
+
+				</p:contentFlow>
+
+			</div>
+		</p:layoutUnit>
+		<p:layoutUnit position="south" style="background-color: #0093dd">
+			<ui:include src="/WEB-INF/footer_include.xhtml" />
+		</p:layoutUnit>
+	</p:layout>
+</body>
+</html>

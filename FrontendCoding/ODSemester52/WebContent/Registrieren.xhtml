@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+	<h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+
+	<link rel="stylesheet" href="style.css" />
+	<title>Neues aus Mosbach</title>
+
+	<style type="text/css">
+.ui-g-12 {
+	text-align: left;
+	height: auto;
+}
+</style>
+
+
+</h:head>
+<body>
+
+	<ui:include src="/WEB-INF/header_include.xhtml" />
+
+	<h1 align="center" style="margin-bottom: 0px; font-family: Open Sans">Registrieren</h1>
+
+	<h:form id="form">
+		<div style="padding-top: 15px; padding-left: 5%; padding-right: 5%">
+			<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-3,ui-g-12 ui-md-2,ui-g-12 ui-md-4,ui-g-12 ui-md-3" layout="grid"
+				styleClass="ui-panelgrid-blank ui-fluid">
+				<p:outputLabel value="" />
+				<p:outputLabel for="email" value="E-Mail Adresse" indicateRequired="true"/>
+				<p:inputText id="email" label="E-Mail" value="#{userBean.user.email}" >
+					
+				</p:inputText>
+			</p:panelGrid>
+		</div>
+
+		<div style="padding-top: 15px; padding-left: 5%; padding-right: 5%">
+			<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-3,ui-g-12 ui-md-2,ui-g-12 ui-md-4,ui-g-12 ui-md-3" layout="grid"
+				styleClass="ui-panelgrid-blank ui-fluid">
+				<p:outputLabel value="" />
+				<p:outputLabel for="password" value="Passwort" indicateRequired="true"/>
+				<p:password id="password" label="Passwort" value="#{userBean.user.pw}" feedback="true"  />
+			</p:panelGrid>
+		</div>
+
+		<div style="padding-top: 10px; padding-left: 5%; padding-right: 5%">
+			<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-3,ui-g-12 ui-md-2,ui-g-12 ui-md-4,ui-g-12 ui-md-3" layout="grid"
+				styleClass="ui-panelgrid-blank ui-fluid">
+				<p:outputLabel value="" />
+				<p:outputLabel for="password2" value="Passwort bestätigen" indicateRequired="true"/>
+				<p:password id="password2" label="Passwort bestätigen" value="#{userBean.password2}" />
+			</p:panelGrid>
+		</div>
+
+		<div style="padding-top: 15px; padding-left: 5%; padding-right: 5%">
+			<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-3,ui-g-12 ui-md-2,ui-g-12 ui-md-1,ui-g-12 ui-md-6" layout="grid"
+				styleClass="ui-panelgrid-blank ui-fluid">
+				<p:outputLabel value="" />
+				<p:outputLabel for="newsletter" value="Newsletter abonnieren" />
+				<p:selectBooleanCheckbox id="newsletter" value="#{userBean.user.hatnews}" />
+			</p:panelGrid>
+		</div>
+
+
+		<div style="padding-top: 15px; padding-left: 5%; padding-right: 5%">
+			<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-3,ui-g-12 ui-md-2,ui-g-12 ui-md-4,ui-g-12 ui-md-3" layout="grid"
+				styleClass="ui-panelgrid-blank ui-fluid">
+				<p:outputLabel value="" />
+
+				<p:commandButton value="Abbrechen" action="Startseite.jsf">
+					<p:confirm header="Abbruch bestätigen" message="Wollen Sie wirklich abbrechen?" icon="pi pi-exclamation-triangle" />
+				</p:commandButton>
+
+				<p:commandButton id="registrieren" value="Registrieren" action="#{userBean.registrieren}" update="@([id$=growl])"/>
+			</p:panelGrid>
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Ja" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+				<p:commandButton value="Nein" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+			</p:confirmDialog>
+		</div>
+
+
+	</h:form>
+
+	<p:layoutUnit position="south" style="background-color: #0093dd">
+		<ui:include src="/WEB-INF/footer_include.xhtml" />
+	</p:layoutUnit>
+
+</body>
+</html>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+	<h:outputStylesheet name="primeicons/primeicons.css"
+		library="primefaces" />
+
+	<link rel="stylesheet" href="style.css" />
+	<title>Neues aus Mosbach</title>
+
+	<style type="text/css">
+.ui-g-12 {
+	text-align: left;
+	height: auto;
+}
+
+.right {
+	text-align: right;
+}
+</style>
+
+
+</h:head>
+<body id="body">
+	<p:outputPanel id="all">
+
+		<ui:include src="/WEB-INF/header_include.xhtml" />
+		<div style="height: 100px" align="center">
+
+			<p:graphicImage url="/Images/StandardProfilbild.png"
+				styleClass="content" style="padding-top: 5px"
+				rendered="#{userBean.loggedIn}" height="200px" width="200px" />
+			<h:outputText rendered="#{!userBean.loggedIn}"
+				value="Nicht eingeloggt" />
+		</div>
+
+		<div class="ui-fluid"
+			style="padding-top: 80px; padding-left: 0%; padding-right: 0%">
+
+			<p:panelGrid columns="2" rendered="#{userBean.loggedIn}"
+				columnClasses="ui-g-12 ui-md-4,ui-g-12 ui-md-8" layout="grid"
+				styleClass="ui-panelgrid-blank ui-fluid">
+
+				<h:form>
+					<p:panelGrid columns="2"
+						columnClasses="ui-g-12 ui-md-4,ui-g-12 ui-md-8" layout="grid"
+						styleClass="ui-panelgrid-blank ui-fluid" id="userprofil">
+
+						<p:outputLabel style="font-weight: bold;"
+							value="Profil bearbeiten" />
+						<p:commandButton icon="pi pi-pencil"
+							action="#{userBean.changeBearbeiten}" update="userprofil" />
+
+
+						<p:outputLabel for="usermail" value="E-Mail Adresse" />
+						<p:inputText id="usermail" value="#{userBean.user.email}"
+							disabled="#{!userBean.bearbeiten}" />
+
+						<p:outputLabel for="password" value="Passwort ändern" />
+						<p:password id="password" value="#{userBean.user.pw}"
+							feedback="true" disabled="#{!userBean.bearbeiten}" />
+
+						<p:outputLabel for="password2" value="Passwort bestätigen" />
+						<p:password id="password2" value="#{userBean.password2}"
+							disabled="#{!userBean.bearbeiten}" />
+
+						<p:outputLabel for="vorname" value="Vorname" />
+						<p:inputText id="vorname" value="#{userBean.user.vorname}"
+							disabled="#{!userBean.bearbeiten}" />
+
+						<p:outputLabel for="nachname" value="Nachname" />
+						<p:inputText id="nachname" value="#{userBean.user.nachname}"
+							disabled="#{!userBean.bearbeiten}" />
+
+						<p:outputLabel for="newsletter" value="Newsletter" />
+						<p:selectBooleanCheckbox id="newsletter"
+							value="#{userBean.user.hatnews}"
+							disabled="#{!userBean.bearbeiten}" />
+
+						<p:commandButton value="Speichern"
+							action="#{userBean.userSpeichern}" update="@([id$=growl]) userprofil" />
+					</p:panelGrid>
+				</h:form>
+
+
+				<p:panelGrid columns="1" columnClasses="ui-g-12 ui-md-12"
+					layout="grid" styleClass="ui-panelgrid-blank ui-fluid" id="list">
+					<h2 align="center" style="margin-top: 0px">Eigene
+						Veranstaltungen</h2>
+					<h:form rendered="#{userBean.user.istVeranstalter}">
+						<p:dataView id="dataView" var="veran"
+							value="#{userBean.userVeranstaltungen}" rows="5" paginator="true"
+							rowsPerPageTemplate="5,8,10"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							listIcon="pi pi-bars">
+							<f:facet name="header">
+								<p:selectCheckboxMenu label="Veranstalter"
+									value="#{userBean.selectedVeranstalter}" style="width:80%">
+									<f:selectItems value="#{userBean.user.veranstaltendeUser}" />
+									<p:ajax listener="#{userBean.onVeranstalterChange}"
+										update="dataView" event="toggleSelect" />
+									<p:ajax listener="#{userBean.onVeranstalterChange}"
+										update="dataView" />
+								</p:selectCheckboxMenu>
+							</f:facet>
+
+							<p:dataViewListItem>
+								<h:panelGrid columns="5" style="width:100%"
+									columnClasses="ui-g-24 ui-md-1, ui-g-24 ui-md-1, ui-g-24 ui-md-20, ui-g-24 ui-md-1, ui-g-24 ui-md-1">
+									<p:commandButton icon="pi pi-check"
+										rendered="#{veran.istfreigegeben}" id="ttgenehmigt" />
+									<p:commandButton icon="pi pi-question"
+										rendered="#{!veran.istfreigegeben}" id="ttoffen" />
+
+
+
+
+
+
+									<p:graphicImage url="/Images/#{veran.dateipfad}"
+										style="width:70px; padding: 0px" />
+
+									<p:outputPanel>
+										<h:panelGrid columns="3" cellpadding="1">
+											<h:outputText value="#{veran.titel}"
+												style="font-weight: bold; padding: 0px" />
+
+											<h:outputText value="Datum:" style="padding: 0px" />
+											<h:outputText value="#{veran.datefromAsDate}"
+												style="font-weight: bold; padding: 0px">
+												<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+											</h:outputText>
+										</h:panelGrid>
+									</p:outputPanel>
+
+									<p:commandButton action="#{userBean.veranstaltungLoeschen}"
+										icon="pi pi-trash" update="dataView" style="padding: 0px">
+										<f:setPropertyActionListener value="#{veran}"
+											target="#{userBean.selectedVeranstaltung}" />
+										<p:confirm header="Löschen bestätigen"
+											message="Wollen Sie die Veranstaltung #{veran.titel} wirklich löschen?"
+											icon="pi pi-exclamation-triangle" />
+									</p:commandButton>
+
+									<p:linkButton icon="pi pi-search"
+										outcome="VeranstaltungDetails.jsf?vid=#{veran.veranstaltungsID}"
+										title="View Detail" style="padding: 0px">
+									</p:linkButton>
+
+									<p:confirmDialog global="true" showEffect="fade"
+										hideEffect="fade">
+										<p:commandButton value="Ja" type="button"
+											styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+										<p:commandButton value="Nein" type="button"
+											styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+									</p:confirmDialog>
+
+									<p:tooltip value="freigegeben" for="ttgenehmigt" position="top" />
+									<p:tooltip value="noch nicht freigegeben" for="ttoffen"
+										position="top" />
+
+								</h:panelGrid>
+							</p:dataViewListItem>
+						</p:dataView>
+
+						<br />
+						<h:outputLink value="javascript:void(0)"
+							onclick="PF('Verdlg').show();" title="verifizieren">
+							<p:commandButton value="Für weiteren Veranstalter verifizieren" />
+						</h:outputLink>
+
+					</h:form>
+
+					<h:form rendered="#{!userBean.user.istVeranstalter}">
+						<h:outputText
+							value="Sie sind noch nicht als Veranstalter verifizert."
+							style="font-weight: bold" />
+						<br />
+						<h:outputText
+							value="Zur Verifizierung füllen Sie bitte ihr Daten inklusiv Vor- und Nachname aus."
+							style="font-weight: bold" />
+						<br />
+						<br />
+						<br />
+						<h:outputLink value="javascript:void(0)"
+							onclick="PF('Verdlg').show();" title="verifizieren">
+							<p:commandButton value="Als Veranstalter verifizieren" />
+						</h:outputLink>
+
+					</h:form>
+				</p:panelGrid>
+			</p:panelGrid>
+		</div>
+		<script type="text/javascript">
+			function handleVerifzierung() {
+				PF('Verdlg').hide();
+			}
+		</script>
+
+		<p:dialog header="Als Veranstalter verifizieren" widgetVar="Verdlg"
+			resizable="false">
+			<h:form enctype="multipart/form-data">
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputLabel for="perso"
+						value="Bitte Personalausweisbild zur Identifikation: " />
+					<p:fileUpload id="perso" value="#{userBean.persoFile}"
+						mode="simple" />
+
+
+					<h:outputLabel for="veranstalter"
+						value="Veranstalter (z.B. Verein, Gastronomie...)" />
+					<p:inputText id="veranstalter"
+						value="#{userBean.veranstalterZurVerifizierung}" />
+
+
+					<f:facet name="footer">
+						<p:commandButton value="Verifizierung anfragen"
+							action="#{userBean.veranstalterVerifizierung}"
+							oncomplete="handleVerifzierung()" ajax="false" />
+					</f:facet>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+
+
+		<p:layoutUnit position="south" style="background-color: #0093dd">
+			<ui:include src="/WEB-INF/footer_include.xhtml" />
+		</p:layoutUnit>
+	</p:outputPanel>
+</body>
+</html>

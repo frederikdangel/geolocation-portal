@@ -1,0 +1,51 @@
+Map Seite Input Fields Umkreis Position
+							<p:inputNumber id="lat" widgetVar="lat" value="#{vbean.userPositionLat}" decimalPlaces="6" rendered="#{false}">
+								<p:ajax update="@([id$=abschickenButton]) @([id$=gmap]) @([id$=dataView])" listener="#{vbean.onPositionChange}" />
+							</p:inputNumber>
+							<p:inputNumber id="lng" widgetVar="lng" value="#{vbean.userPositionLng}" decimalPlaces="6" rendered="#{false}">
+								<p:ajax update="@([id$=abschickenButton]) @([id$=gmap]) @([id$=dataView])" listener="#{vbean.onPositionChange}" />
+							</p:inputNumber>
+							<h:form>
+								<h:inputHidden id="userPositionLat" value="#{vbean.poslat}" />
+								<h:inputHidden id="userPositionLng" value="#{vbean.poslng}" />
+							</h:form>
+
+
+
+
+Bearbeiten Button auf dem Profil bei Veranstaltungen hab ich erstmal rausgenommen:
+								<p:commandLink action="VeranstaltungEinreichen.xhtml" title="Bearbeiten">
+									<h:outputText styleClass="ui-icon pi pi-pencil" style="margin:0 auto;" />
+									<f:setPropertyActionListener value="#{veran}" target="#{einreichenBean.veranstaltung}" />
+								</p:commandLink>
+
+Exporters DataTable Sachbearbeiteroberfläche:
+										<f:facet name="{Exporters}">
+											<div style="float: right; padding-top: 5px;">
+
+												<h:commandLink>
+													<p:graphicImage name="/xlsx.png.xhtml.png" width="24" />
+													<p:dataExporter type="xlsxstream" target="tbl" fileName="Veranstalter" />
+												</h:commandLink>
+
+												<h:commandLink>
+													<p:graphicImage name="/pdf.png.xhtml.png" width="24" />
+													<p:dataExporter type="pdf" target="tbl" fileName="Veranstalter" />
+												</h:commandLink>
+
+												<h:commandLink>
+													<p:graphicImage name="/csv.png.xhtml.png" width="24" />
+													<p:dataExporter type="csv" target="tbl" fileName="Veranstalter" />
+												</h:commandLink>
+
+												<h:commandLink>
+													<p:graphicImage name="/xml.png.xhtml.png" width="24" />
+													<p:dataExporter type="xml" target="tbl" fileName="Veranstalter" />
+												</h:commandLink>
+
+												<h:commandLink>
+													<p:graphicImage name="/keyboardpencil.png.xhtml.png" width="24" />
+													<p:dataExporter type="text" target="tbl" fileName="Veranstalter" exporter="#{dataExporterView.textExporter}" />
+												</h:commandLink>
+											</div>
+										</f:facet>

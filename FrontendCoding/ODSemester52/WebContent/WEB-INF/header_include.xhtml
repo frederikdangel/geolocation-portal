@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<h:graphicImage value="Images/Banner7 100px auslaufend.png"
+		width="100%" />
+	<h:form id="menubar">
+		<p:menubar  autoDisplay="true" style="overflow: visible;">
+			<p:menuitem value="Aktuelles" url="Startseite.jsf" />
+			<p:submenu label="Veranstaltungen">
+				<p:menuitem value="In meiner Nähe" url="Map.jsf" />
+				<p:separator />
+				<p:menuitem value="Veranstaltung einreichen"
+					url="VeranstaltungEinreichen.jsf" />
+			</p:submenu>
+			<p:menuitem value="Sachbearbeiteroberfläche" url="UserVerifizierung.jsf" rendered="#{userBean.user.istAngestellter}"/>
+
+			<f:facet name="options">
+				<h:outputLink value="javascript:void(0)" onclick="PF('dlg').show();"
+					title="login" rendered="#{!userBean.loggedIn}" id="button1">
+					<p:commandButton value="Login" />
+				</h:outputLink>
+
+				<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
+
+				<p:linkButton value="Benutzerprofil" outcome="UserProfil.jsf"
+					rendered="#{userBean.loggedIn}" />
+				<p:commandButton rendered="#{userBean.loggedIn}" value="Logout"
+					action="#{userBean.logout}" update="@form" ><h:outputLink></h:outputLink>    </p:commandButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<script type="text/javascript">
+	function handleLoginRequest(xhr, status, args) {
+		if (args.validationFailed || !args.loggedIn) {
+		} else {
+			PF('dlg').hide();
+			$('#loginLink').fadeOut();
+		}
+	}	
+	</script>
+
+	<p:dialog header="Login" widgetVar="dlg" resizable="false"
+		appendTo="@(body)">
+		<h:form>
+			<h:panelGrid columns="2" cellpadding="5">
+				<h:outputLabel for="username" value="E-Mail:" />
+				<p:inputText id="username" value="#{userBean.user.email}"
+					label="E-Mail" required="true" requiredMessage="E-Mail eingeben" validatorMessage="Keine gültige E-Mail">
+					<f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"></f:validateRegex>
+					</p:inputText>
+
+				<h:outputLabel for="password" value="Password:" />
+				<p:password id="password" value="#{userBean.user.pw}"
+					label="Passwort" required="true" requiredMessage="Passwort eingeben"/>
+
+
+				<f:facet name="footer">
+					<p:commandButton value="Login" update="menubar @([id$=all])"
+						action="#{userBean.login}"
+						oncomplete="handleLoginRequest(xhr, status, args)" />
+					<a href="Registrieren.jsf">Registrieren</a>
+				</f:facet>
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+
+</ui:composition>

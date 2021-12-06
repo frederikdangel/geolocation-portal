@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+	<h:outputStylesheet name="primeicons/primeicons.css"
+		library="primefaces" />
+
+	<link rel="stylesheet" href="style.css" />
+	<title>Neues aus Mosbach</title>
+
+	<script type="text/javascript"
+		src="https://maps.google.com/maps/api/js?sensor=false&amp;key=AIzaSyDtLxjOgNg_RaTnX3b4s2Vx-Z27ZF98zMA" />
+
+	<style type="text/css">
+.picture {
+	text-align: center;
+	align-content: center;
+	align-items: center;
+	align-self: center;
+}
+
+.ui-g-12 {
+	text-align: left;
+	height: auto;
+}
+
+.ui-panelgrid-blank {
+	padding-left: 1px;
+	padding-right: 1px;
+}
+</style>
+
+
+</h:head>
+<body>
+
+	<ui:include src="/WEB-INF/header_include.xhtml" />
+
+	<h3 align="center" style="margin-bottom: 0px; font-family: Open Sans">#{vView.veranstaltung.titel}</h3>
+
+	<div class="ui-fluid"
+		style="padding-top: 10px; padding-left: 1%; padding-right: 1%"
+		align="center">
+
+		<p:panelGrid columns="2"
+			columnClasses="ui-g-12 ui-md-5,ui-g-12 ui-md-7" layout="grid"
+			styleClass="ui-panelgrid-blank ui-fluid">
+
+			<p:panelGrid columns="1" columnClasses="ui-g-12 ui-md-12"
+				layout="grid" styleClass="ui-panelgrid-blank ui-fluid">
+				<p:graphicImage url="/Images/#{vView.veranstaltung.dateipfad}"
+					alt="Bild kann nicht geladen werden"
+					style="text-align: center; width:100%" />
+
+				<p:gmap id="gmap" center="#{vView.position}" zoom="16" type="HYBRID"
+					model="#{vView.model}" style="width:100%;height:300px">
+				</p:gmap>
+			</p:panelGrid>
+			<p:panelGrid columns="1" columnClasses="ui-g-12 ui-md-12"
+				layout="grid" styleClass="ui-panelgrid-blank ui-fluid">
+
+				<p:panelGrid columns="2"
+					columnClasses="ui-g-12 ui-md-4,ui-g-12 ui-md-8" layout="grid"
+					styleClass="ui-panelgrid-blank ui-fluid">
+
+					<p:outputLabel for="veranstalter" value="Veranstalter" style="font-weight: bold;"/>
+					<h:outputText id="veranstalter"
+						value="#{vView.veranstaltung.veranstalter.name}" />
+
+					<p:outputLabel for="okat" value="Kategorie" style="font-weight: bold;"/>
+					<h:outputText id="okat"
+						value="#{vView.veranstaltung.oberkategorie}" />
+
+					<p:outputLabel for="ukat" value="Unterkategorie" style="font-weight: bold;"/>
+					<h:outputText id="ukat"
+						value="#{vView.veranstaltung.unterkategorie}" />
+
+					<p:outputLabel for="datefrom" value="Datum und Uhrzeit" style="font-weight: bold;" />
+					<h:outputText id="datefrom"
+						value="#{vView.veranstaltung.datefromAsDate}">
+						<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+					</h:outputText>
+
+					<p:outputLabel for="bis" value="bis"
+						rendered="#{vView.veranstaltung.datetoAsDate!=null}" style="font-weight: bold;"/>
+					<h:outputText id="bis" value="#{vView.veranstaltung.datetoAsDate}"
+						rendered="#{vView.veranstaltung.datetoAsDate!=null}">
+						<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+					</h:outputText>
+
+					<p:outputLabel for="plaetze" value="Anzahl Tickets"
+						rendered="#{vView.veranstaltung.mitTickets}" style="font-weight: bold;"/>
+					<h:outputText id="plaetze" value="#{vView.veranstaltung.plaetze}"
+						rendered="#{vView.veranstaltung.mitTickets}" />
+
+					<p:outputLabel for="preis" value="Preis"
+						rendered="#{vView.veranstaltung.preis!=0}" style="font-weight: bold;"/>
+					<h:outputText id="preis" value="#{vView.veranstaltung.preis}"
+						rendered="#{vView.veranstaltung.preis!=0}">
+						<f:convertNumber pattern="0.00" />
+						<h:outputText value="€ " />
+					</h:outputText>
+
+					<p:outputLabel for="link" value=""
+						rendered="#{vView.veranstaltung.ticketlink!=null}" />
+					<h:outputLink id="link" value="#{vView.veranstaltung.ticketlink}"
+						rendered="#{vView.veranstaltung.ticketlink!=null}">Hier Tickets kaufen</h:outputLink>
+
+				</p:panelGrid>
+				<h:outputText id="beschreibung"
+					value="#{vView.veranstaltung.beschreibung}" />
+			</p:panelGrid>
+
+
+		</p:panelGrid>
+	</div>
+	<p:layoutUnit position="south" style="background-color: #0093dd">
+		<ui:include src="/WEB-INF/footer_include.xhtml" />
+	</p:layoutUnit>
+
+
+</body>
+</html>

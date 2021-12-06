@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+	<h:outputStylesheet name="primeicons/primeicons.css"
+		library="primefaces" />
+
+	<link rel="stylesheet" href="style.css" />
+	<title>Neues aus Mosbach</title>
+	<script type="text/javascript"
+		src="https://maps.google.com/maps/api/js?sensor=false&amp;key=AIzaSyDtLxjOgNg_RaTnX3b4s2Vx-Z27ZF98zMA" />
+
+
+</h:head>
+<body>
+	<p:outputPanel id="all">
+		<p:layout fullPage="true">
+			<p:layoutUnit position="north">
+				<ui:include src="/WEB-INF/header_include.xhtml" />
+				<h2>Sachbearbeiteroberfläche</h2>
+			</p:layoutUnit>
+			<p:layoutUnit position="center">
+
+				<div class="ui-fluid">
+
+					<p:tabView orientation="left">
+						<p:tab title="Veranstalterverifizierung">
+							<h:panelGrid columns="2" cellpadding="10">
+								<p:dataTable id="dataTableVerifizierung" var="verifizierung"
+									value="#{sBean.verifizierungen}"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+									paginator="true" rows="10" style="margin-bottom:20px">
+
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Name" />
+										</f:facet>
+										<h:outputText
+											value="#{verifizierung.user.vorname} #{verifizierung.user.nachname}" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Personalausweis" />
+										</f:facet>
+										<p:graphicImage url="/Images/#{verifizierung.persoablage}"
+											style="height: 70px;" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Veranstalter" />
+										</f:facet>
+										<h:outputText value="#{verifizierung.veranstalter}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Verifizierung bestätigen" />
+										</f:facet>
+										<h:form>
+											<p:commandButton oncomplete="PF('Besdlg').show();"
+												title="verifizieren" icon="pi pi-check"
+												update="@([id$=Besdialog])">
+												<f:setPropertyActionListener
+													target="#{sBean.selectedVerifizierung}"
+													value="#{verifizierung}" />
+											</p:commandButton>
+
+
+											<p:commandButton action="#{sBean.verifizierungAblehnen}"
+												icon="pi pi-times" update="@([id$=dataTableVerifizierung])">
+												<f:setPropertyActionListener value="#{verifizierung}"
+													target="#{sBean.selectedVerifizierung}" />
+												<p:confirm header="Ablehnen bestätigen"
+													message="Wollen Sie die Verifizierung von #{verifizierung.user.vorname} #{verifizierung.user.nachname} 
+													für den Veranstalter #{verifizierung.veranstalter} wirklich ablehnen?"
+													icon="pi pi-exclamation-triangle" />
+											</p:commandButton>
+
+											<p:confirmDialog global="true" showEffect="fade"
+												hideEffect="fade">
+												<p:commandButton value="Ja" type="button"
+													styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+												<p:commandButton value="Nein" type="button"
+													styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+											</p:confirmDialog>
+										</h:form>
+									</p:column>
+
+								</p:dataTable>
+							</h:panelGrid>
+						</p:tab>
+						<p:tab title="Benutzerverwaltung">
+							<h:panelGrid columns="2" cellpadding="10">
+								<h:form>
+									<p:dataTable id="userliste" var="user" value="#{sBean.alleUser}"
+										paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+										paginator="true" rows="10" style="margin-bottom:20px">
+
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="E-Mail" />
+											</f:facet>
+											<h:outputText value=" #{user.email}" />
+										</p:column>
+
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Vorname" />
+											</f:facet>
+											<h:outputText value="#{user.vorname}" />
+										</p:column>
+
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Nachname" />
+											</f:facet>
+											<h:outputText value=" #{user.nachname}" />
+										</p:column>
+
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Aktionen" />
+											</f:facet>
+											<p:commandButton value="Sperren" />
+										</p:column>
+
+									</p:dataTable>
+								</h:form>
+							</h:panelGrid>
+						</p:tab>
+						<p:tab title="Veranstaltung freigeben">
+							<h:panelGrid columns="2" cellpadding="6">
+								<p:dataTable id="dataTableFreigeben" var="veranstaltung"
+									value="#{sBean.offeneVeranstaltungen}"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+									paginator="true" rows="10" style="margin-bottom:20px">
+
+
+									<p:column>
+										<f:facet name="header">
+										</f:facet>
+										<p:graphicImage url="/Images/#{veranstaltung.dateipfad}"
+											style="height: 70px;" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Titel" />
+										</f:facet>
+										<h:outputText value="#{veranstaltung.titel}" />
+									</p:column>
+
+									<p:column width="10%">
+										<f:facet name="header">
+											<h:outputText value="Veranstalter" />
+										</f:facet>
+										<h:outputText value="#{veranstaltung.veranstalter}" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="von" />
+										</f:facet>
+										<h:outputText value="#{veranstaltung.datefromAsDate}">
+											<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+										</h:outputText>
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="bis" />
+										</f:facet>
+										<h:outputText value="#{veranstaltung.datetoAsDate}">
+											<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+										</h:outputText>
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Kategorie" />
+										</f:facet>
+										<h:outputText
+											value="#{veranstaltung.oberkategorie.oberkategoriename}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Unterkategorie" />
+										</f:facet>
+										<h:outputText
+											value="#{veranstaltung.unterkategorie.unterkategoriename}" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Ort" />
+										</f:facet>
+										<p:commandButton action="#{sBean.setMapParameters}"
+											oncomplete="PF('Mapdlg').show();" icon="pi pi-map-marker"
+											update="@([id$=Mapdlg])">
+											<f:setPropertyActionListener value="#{veranstaltung}"
+												target="#{sBean.selectedVeranstaltung}" />
+										</p:commandButton>
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Veranstaltung freigeben" />
+										</f:facet>
+										<h:form>
+											<p:commandButton action="#{sBean.veranstaltungFreigeben}"
+												icon="pi pi-check" update="@([id$=dataTableFreigeben])">
+												<f:setPropertyActionListener value="#{veranstaltung}"
+													target="#{sBean.selectedVeranstaltung}" />
+												<p:confirm header="Freigeben bestätigen"
+													message="Veranstaltung #{veranstaltung.titel} freigeben?"
+													icon="pi pi-exclamation-triangle" />
+											</p:commandButton>
+
+											<p:commandButton action="#{sBean.veranstaltungAblehnen}"
+												icon="pi pi-times" update="@([id$=dataTableFreigeben])">
+												<f:setPropertyActionListener value="#{veranstaltung}"
+													target="#{sBean.selectedVeranstaltung}" />
+												<p:confirm header="Ablehnen bestätigen"
+													message="Wollen Sie die Veranstaltung #{veranstaltung.titel} wirklich ablehnen?"
+													icon="pi pi-exclamation-triangle" />
+											</p:commandButton>
+
+											<p:confirmDialog global="true" showEffect="fade"
+												hideEffect="fade">
+												<p:commandButton value="Ja" type="button"
+													styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+												<p:commandButton value="Nein" type="button"
+													styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+											</p:confirmDialog>
+										</h:form>
+									</p:column>
+
+								</p:dataTable>
+							</h:panelGrid>
+						</p:tab>
+
+					</p:tabView>
+				</div>
+			</p:layoutUnit>
+			<p:layoutUnit position="south" style="background-color: #0093dd">
+				<ui:include src="/WEB-INF/footer_include.xhtml" />
+			</p:layoutUnit>
+		</p:layout>
+		<script type="text/javascript">
+			function handleBestaetigung() {
+				PF('Besdlg').hide();
+			}
+		</script>
+
+		<p:dialog header="Verifizierung bestätigen" widgetVar="Besdlg"
+			id="Besdialog" resizable="false">
+			<h:form id="bestaetigenForm">
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputLabel for="name" value="Name: " />
+					<h:outputText id="name"
+						value="#{sBean.selectedVerifizierung.user.vorname} #{sBean.selectedVerifizierung.user.nachname}"></h:outputText>
+
+					<h:outputLabel for="veranstalter"
+						value="Angegebener Veranstalter: " />
+					<h:outputText id="veranstalter"
+						value="#{sBean.selectedVerifizierung.veranstalter}" />
+
+					<p:outputLabel for="neuerVeranstalter"
+						value="Veranstalter wählen oder anlegen?" />
+					<p:selectOneRadio id="neuerVeranstalter"
+						value="#{sBean.neuerVeranstalter}">
+						<f:selectItem itemLabel="Wählen" itemValue="#{false}" />
+						<f:selectItem itemLabel="Anlegen" itemValue="#{true}" />
+						<p:ajax update="bestaetigenForm" />
+					</p:selectOneRadio>
+
+					<p:outputLabel rendered="#{!sBean.neuerVeranstalter}"
+						for="veranstalterWaehlen" value="Bestehenden Veranstalter wählen:" />
+					<p:selectOneMenu rendered="#{!sBean.neuerVeranstalter}"
+						id="veranstalterWaehlen"
+						value="#{sBean.selectedVerifizierung.selectedVeranstalter}">
+						<f:selectItem itemLabel="Veranstalter wählen" itemValue="" />
+						<f:selectItems value="#{sBean.moeglVeranstalter}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel rendered="#{sBean.neuerVeranstalter}"
+						for="veranstalterNeu" value="Neuen Veranstalter anlegen:" />
+					<p:inputText rendered="#{sBean.neuerVeranstalter}"
+						id="veranstalterNeu"
+						value="#{sBean.selectedVerifizierung.selectedVeranstalter}" />
+
+					<f:facet name="footer">
+						<p:commandButton value="Abbrechen"
+							oncomplete="handleBestaetigung()" ajax="false" />
+						<p:commandButton value="Verifizierung bestätigen"
+							action="#{sBean.verifizierungBestaetigen}"
+							oncomplete="handleBestaetigung()"
+							update="@([id$=dataTableVerifizierung])" ajax="false" />
+					</f:facet>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog header="Ort der Veranstaltung" widgetVar="Mapdlg" width="600" height="400"
+			id="Mapdlg" resizable="true">
+			<p:gmap id="gmap" center="#{sBean.position}" zoom="16" type="HYBRID"
+				model="#{sBean.model}" style="width:100%;height:100%;">
+			</p:gmap>
+		</p:dialog>
+
+
+	</p:outputPanel>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+@charset "utf-8";
+.ui-menu .ui-menu-list .ui-widget-header {
+	width: 95%;
+}
+
+.ui-fluid {
+	padding-top: 2%;
+	padding-left: 5%;
+	padding-right: 5%;
+}
+
+.white-button.ui-button.ui-state-default {
+	background-color: #ffffff;
+	color: #222222;
+	border-color: #d6d6d6;
+	/* with the exported variables from Nova and Luna Themes*/
+	border-color: var(- -input-border-color, #d6d6d6);
+}
+
+.white-button.ui-button.ui-state-default:enabled:hover, .white-button.ui-button.ui-state-default:focus
+	{
+	background-color: #f2f2f2;
+	border-color: #ccc;
+	color: #373a3c;
+	/* with the exported variables from Nova and Luna Themes*/
+	border-color: var(- -input-hover-border-color, #ccc);
+}
+
+.ui-layout-pane-north {
+	height: auto !important;
+	overflow: auto;
+}
+
+
+
+.ui-layout-center {
+	overflow: auto !important;
+}
+
+.ui-g-12{
+	height: auto;
+	
+}
+
+.ui-panelgrid-blank{
+	text-align: left;	
+}
+
+ul.ui-menu-child {
+    white-space: nowrap;
+    width: auto !important;
+}
